@@ -1,6 +1,6 @@
 # EtherMail maintenance
 
-This fork tracks the upstream `develop` branch of [web3swift](https://github.com/web3swift-team/web3swift). The initial compatibility baseline is release 3.3.2, with the following upstream changes merged while they await an upstream release:
+This fork is maintained on `main`, based on the upstream `develop` branch of [web3swift](https://github.com/web3swift-team/web3swift). The initial compatibility baseline is release 3.3.2, with the following upstream changes merged while they await an upstream release:
 
 - [PR #910](https://github.com/web3swift-team/web3swift/pull/910): give the HTTP request helper a distinct name and validate the HTTP response type.
 - [PR #918](https://github.com/web3swift-team/web3swift/pull/918): replace ambiguous byte-array accesses in HD wallet derivation.
@@ -22,9 +22,9 @@ The selected suites do not require a blockchain node or external RPC access. The
 
 ## Updating the fork
 
-1. Review upstream changes and merge them into `develop`.
+1. Review changes from upstream `develop` and merge them into `main`.
 2. Keep the dependency fixture aligned with the app when updating dependency versions.
 3. Run the compatibility checks and the app's simulator build.
-4. Pin the app's Swift package reference to the verified full commit SHA.
+4. Resolve the app's `main` branch dependency and rebuild before shipping updates.
 
-Upstream release tags retain their original meaning. App integrations use immutable commit pins for fork-specific fixes.
+Upstream release tags retain their original meaning. The app tracks this fork's `main` branch for fork-specific fixes.

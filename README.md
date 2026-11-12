@@ -1,7 +1,7 @@
 # web3swift
 **web3swift** is an iOS toolbelt for interaction with the Ethereum network.
 
-This is the EtherMail maintenance fork with the Xcode 27 compatibility fixes from upstream PRs [#910](https://github.com/web3swift-team/web3swift/pull/910) and [#918](https://github.com/web3swift-team/web3swift/pull/918). See [MAINTENANCE.md](MAINTENANCE.md) for the fork policy and regression checks.
+This is the EtherMail maintenance fork with the Xcode 27 compatibility fixes from upstream PRs [#910](https://github.com/web3swift-team/web3swift/pull/910) and [#918](https://github.com/web3swift-team/web3swift/pull/918). The EtherMail app tracks this fork's `main` branch. See [MAINTENANCE.md](MAINTENANCE.md) for the fork policy and regression checks.
 
 ## Social media
 [Join our discord](https://discord.gg/ZgABSCGNWF) or [Telegram](https://t.me/web3swift) if you need support or want to contribute to web3swift development!

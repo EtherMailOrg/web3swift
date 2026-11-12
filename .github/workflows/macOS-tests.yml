@@ -2,14 +2,14 @@ name: Xcode 27 compatibility
 
 on:
   push:
-    branches: [develop, master]
+    branches: [main, develop, master]
     paths:
       - Package.swift
       - Sources/**
       - Tests/**
       - .github/**
   pull_request:
-    branches: [develop]
+    branches: [main, develop]
   workflow_dispatch:
 
 permissions:
