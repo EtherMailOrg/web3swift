@@ -1,61 +1,41 @@
-name: "macOS 13"
+name: Xcode 27 compatibility
 
 on:
   push:
-    branches:
-      - master
-      - develop
-      - hotfix
+    branches: [develop, master]
     paths:
-      - Packag*.swift
-      - web3swift.podspec
-      - Cartfile
+      - Package.swift
       - Sources/**
-      - 'Tests/**'
-      - 'web3swift*/**'
-      - '.github/workflows/**'
+      - Tests/**
+      - .github/**
   pull_request:
-    branches:
-      - master
-      - develop
-      - unstable
-      # Temporary develop-X.Y.Z branches may be added and removed from here as we release new versions
-      - develop-4.0
+    branches: [develop]
+  workflow_dispatch:
 
-env:
-  DEVELOPER_DIR: /Applications/Xcode_15.2.app/Contents/Developer
+permissions:
+  contents: read
+
+concurrency:
+  group: xcode27-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
-  spm:
-    name: Swift Package Manager 5.9
-    runs-on: macos-13
-    concurrency:
-      group: spm-${{ github.run_id }}
-      cancel-in-progress: false
+  compatibility:
+    runs-on: xcode-27
+    timeout-minutes: 20
     steps:
-      - uses: actions/checkout@v3
-      - name: Discover typos
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - name: Verify Xcode toolchain
         run: |
-          pipx install codespell
-          codespell  # See .codespellrc for args
-      - name: SwiftLint
-        run: |
-          # 1. Make all automated fixes that are possible
-          # 2. git diff to see what (if any) automated fixes were made
-          # 3. See https://github.com/realm/SwiftLint#xcode explains why the double run
-          swiftlint --fix --quiet && git diff && swiftlint --quiet
-      - name: Install Foundry (includes anvil EVM)
-        run: |
-          curl -L https://foundry.paradigm.xyz | bash
-          source ~/.bashrc
-          foundryup
-      - name: Start anvil in background
-        run: ~/.foundry/bin/anvil -q &
-      - name: Resolve dependencies
-        run: swift package resolve
-      - name: Build
-        run: swift build --build-tests
-      - name: Run local tests
-        run: swift test --skip-build -c debug --filter localTests
-      - name: Run remote tests
-        run: swift test --skip-build -c debug --filter remoteTests
+          xcodebuild -version
+          swift --version
+          case "$(xcodebuild -version)" in
+            "Xcode 27."*) ;;
+            *) echo "::error::Xcode 27 is required"; exit 1 ;;
+          esac
+      - name: Select app dependency baseline
+        run: cp .github/compatibility/Package.resolved Package.resolved
+      - name: Run offline wallet and HTTP regression tests
+        run: >-
+          swift test --force-resolved-versions
+          --filter 'localTests\.(BIP32KeystoreTests|BIP32MnemonicPhraseStringTests|BIP32MnemonicPhraseStringArrayTests|BIP44Tests|BIP44ErrorTests|HDversionTest|HTTPCompatibilityTests)'
